@@ -1,6 +1,30 @@
 import React from 'react';
 import logo from './logo.svg';
 import './App.css';
+import { gql } from "apollo-boost";
+import ApolloClient from 'apollo-boost';
+
+const client = new ApolloClient({
+  uri: 'https://pine64:4000/graphql',
+});
+
+
+
+client
+  .query({
+    query: gql`
+      {
+        allMicrobes{
+          edges{
+            node{
+              fullName
+            }
+          }
+        }
+      }
+    `
+  })
+  .then(result => console.log(result));
 
 function App() {
   return (
