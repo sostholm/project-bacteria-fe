@@ -1,48 +1,42 @@
 import React from 'react';
 import logo from './logo.svg';
 import './App.css';
-import { gql } from "apollo-boost";
-import ApolloClient from 'apollo-boost';
 
-const client = new ApolloClient({
-  uri: 'https://pine64:4000/graphql',
-});
+import { ApolloProvider } from '@apollo/react-hooks'
+import { useQuery } from '@apollo/react-hooks';
+import { gql } from 'apollo-boost'
 
 
-
-client
-  .query({
-    query: gql`
-      {
-        allMicrobes{
-          edges{
-            node{
-              fullName
-            }
-          }
+const ALL_MICROBES = gql`
+  {
+    allMicrobes{
+      edges{
+        node{
+          fullName
         }
       }
-    `
-  })
-  .then(result => console.log(result));
+    }
+  }
+`
+
+function AllMicrobes(){
+  const {loading, error, data} = useQuery(ALL_MICROBES)
+
+  if(loading) return <p>Loading...</p>
+  if(error) return <p>Error:(</p>
+
+  console.log('data', data)
+  return data.allMicrobes.edges.map(node => (
+    <div key={node.node.fullName}>
+      <p>{node.node.fullName}</p>
+    </div>
+  ))
+}
 
 function App() {
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <AllMicrobes />
     </div>
   );
 }
