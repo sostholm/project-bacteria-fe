@@ -25,7 +25,6 @@ function AllMicrobes(){
   if(loading) return <p>Loading...</p>
   if(error) return <p>Error:(</p>
 
-  console.log('data', data)
   return data.allMicrobes.edges.map(node => (
     <div key={node.node.fullName}>
       <p>{node.node.fullName}</p>
